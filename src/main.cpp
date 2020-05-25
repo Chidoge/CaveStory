@@ -1,12 +1,7 @@
-#include "../headers/graphics.h"
+#include "../headers/game.h"
 
 int main(int argc, const char* argv[]) {
-
-    Graphics graphics;
-    
-    while (true) {
-        
-    }
+    Game game;
 
     return 0;
 }
