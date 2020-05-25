@@ -7,7 +7,7 @@
 
 Graphics::Graphics() {
     SDL_CreateWindowAndRenderer(640, 480, 0, &this->_window, &this->_renderer);
-    SDL_SetWindowTitle(this->_window, "Cavestory");
+    SDL_SetWindowTitle(this->_window, "Cave Story");
 
 }
 
