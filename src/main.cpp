@@ -1,14 +1,12 @@
-#include <iostream>
-#include <SDL2/SDL.h>
-#undef main
+#include "../headers/graphics.h"
 
 int main(int argc, const char* argv[]) {
 
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-        std::cout << "Error \n";
+    Graphics graphics;
+    
+    while (true) {
+        
     }
 
-    std::cout << "Hello world \n";
-
-    return EXIT_SUCCESS;
+    return 0;
 }
