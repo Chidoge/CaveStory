@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "sprite.h"
+
 /* Forward declare */
 class Graphics;
 
@@ -13,6 +15,8 @@ class Game {
         void gameLoop();
         void draw(Graphics &graphics);
         void update(float elapsedTime);
+
+        Sprite _player;
 };
 
 #endif
