@@ -6,6 +6,7 @@
 #include "../headers/game.h"
 #include "../headers/graphics.h"
 #include "../headers/input.h"
+#include <iostream>
 
 namespace {
     const int FPS = 50;
@@ -22,12 +23,14 @@ void Game::gameLoop() {
     Input input;
     SDL_Event event;
 
+    this->_player = Sprite(graphics, "assets/sprites/MyChar.png", 0, 0, 16, 16, 100, 100);
+
     int lastUpdateTime = SDL_GetTicks();
 
     while (true) {
         if (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN) {
-                /* This condition makes sure that held key doesn't perpetually trigger this action */
+                /* This condition makes sure that holding the key doesn't perpetually trigger this action */
                 if (event.key.repeat == 0) {
                     input.keyDownEvent(event);
                 }
@@ -47,13 +50,18 @@ void Game::gameLoop() {
         const int currentTimeMS = SDL_GetTicks();
         int elapsedTimeMS = currentTimeMS - lastUpdateTime;
         lastUpdateTime = currentTimeMS;
-
         this->update(std::min(currentTimeMS, MAX_FRAME_TIME));
+
+        this->draw(graphics);
     }
 }
 
 void Game::draw(Graphics &graphics) {
+    graphics.clear();
 
+    this->_player.draw(graphics, 100, 100);
+
+    graphics.flip();
 }
 
 void Game::update(float elapsedTime) {
