@@ -26,10 +26,10 @@ void Level::draw(Graphics &graphics) {
 
     for (int x = 0; x < this->_size.x/LENGTH; x++) {
         for (int y = 0; y < this->_size.y/LENGTH; y++) {
-            destRect.x = x*LENGTH;
-            destRect.y = y*LENGTH;
-            destRect.w = LENGTH;
-            destRect.h = LENGTH;
+            destRect.x = x * LENGTH * globals::SRPITE_SCALE;
+            destRect.y = y * LENGTH * globals::SRPITE_SCALE;
+            destRect.w = LENGTH * globals::SRPITE_SCALE;
+            destRect.h = LENGTH * globals::SRPITE_SCALE;
             
             graphics.blitSurface(this->_backgroundTexture, &sourceRect, &destRect);
         }
