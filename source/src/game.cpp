@@ -2,11 +2,11 @@
  * This class holds all information for the main game loop 
  */
 
-#include <SDL2/SDL.h>
 #include "../headers/game.h"
 #include "../headers/graphics.h"
 #include "../headers/input.h"
 #include <iostream>
+#include <SDL2/SDL.h>
 
 namespace {
     const int FPS = 50;
@@ -24,7 +24,7 @@ void Game::gameLoop() {
     SDL_Event event;
 
     this->_player = Player(graphics, 100, 100);
-    this->_level = Level("Map 1", Vector2(100, 100), graphics);
+    this->_level = Level("1", Vector2(100, 100), graphics);
 
     int lastUpdateTime = SDL_GetTicks();
 
