@@ -5,9 +5,8 @@
  * 
  */
 
-#include <string>
-
 #include "animatedSprite.h"
+#include "globals.h"
 
 class Graphics;
 
@@ -19,8 +18,28 @@ class Player : public AnimatedSprite {
         void draw(Graphics &graphics);
         void update(float elapsedTime);
 
+        /* void moveLeft
+         * Moves the player left by -dx
+         */
+        void moveLeft();
+
+        /* void moveRight
+         * Moves the player left by dx
+         */
+        void moveRight();
+
+        /* void stopMoving
+         * Stops moving the player
+         */
+        void stopMoving();
+
         virtual void animationDone(std::string currentAnimation);
         virtual void setupAnimations();
+    
+    private:
+        float _dx, _dy;
+
+        Direction _facing;
 };
 
 #endif

@@ -46,6 +46,15 @@ void Game::gameLoop() {
         if (input.wasKeyPressed(SDL_SCANCODE_ESCAPE) == true) {
             return;
         }
+        else if (input.isKeyHeld(SDL_SCANCODE_LEFT) == true) {
+            this->_player.moveLeft();
+        }
+        else if (input.isKeyHeld(SDL_SCANCODE_RIGHT) == true) {
+            this->_player.moveRight();
+        }
+        if (!input.isKeyHeld(SDL_SCANCODE_LEFT) && !input.isKeyHeld(SDL_SCANCODE_RIGHT)) {
+            this->_player.stopMoving();
+        }
 
         const int currentTimeMS = SDL_GetTicks();
         int elapsedTimeMS = currentTimeMS - lastUpdateTime;
