@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "player.h"
+#include "level.h"
 
 /* Forward declare */
 class Graphics;
@@ -17,6 +18,7 @@ class Game {
         void update(float elapsedTime);
 
         Player _player;
+        Level _level;
 };
 
 #endif
