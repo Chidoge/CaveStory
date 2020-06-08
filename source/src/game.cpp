@@ -23,12 +23,14 @@ void Game::gameLoop() {
     Input input;
     SDL_Event event;
 
-    this->_player = Player(graphics, 100, 100);
     this->_level = Level("1", Vector2(100, 100), graphics);
+    this->_player = Player(graphics, this->_level.getPlayerSpawnPoint());
 
-    int lastUpdateTime = SDL_GetTicks();
+    int LAST_UPDATE_TIME = SDL_GetTicks();
 
     while (true) {
+        input.beginNewFrame();
+        
         if (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN) {
                 /* This condition makes sure that holding the key doesn't perpetually trigger this action */
@@ -57,10 +59,10 @@ void Game::gameLoop() {
             this->_player.stopMoving();
         }
 
-        const int currentTimeMS = SDL_GetTicks();
-        int elapsedTimeMS = currentTimeMS - lastUpdateTime;
-        this->update(std::min(elapsedTimeMS, MAX_FRAME_TIME));
-        lastUpdateTime = currentTimeMS;
+        const int CURRENT_TIME_MS = SDL_GetTicks();
+        int ELAPSED_TIME_MS = CURRENT_TIME_MS - LAST_UPDATE_TIME;
+        this->update(std::min(ELAPSED_TIME_MS, MAX_FRAME_TIME));
+        LAST_UPDATE_TIME = CURRENT_TIME_MS;
 
         this->draw(graphics);
     }
@@ -78,6 +80,11 @@ void Game::draw(Graphics &graphics) {
 void Game::update(float elapsedTime) {
     this->_player.update(elapsedTime);
     this->_level.update(elapsedTime);
+
+    std::vector<Rectangle> others;
+    if ((others = this->_level.checkTileCollisions(this->_player.getBoundingBox())).size() > 0) {
+        this->_player.handleTileCollisions(others);
+    }
 }
 
 Game::~Game() {

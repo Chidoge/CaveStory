@@ -20,10 +20,9 @@ Level::Level(std::string mapName, Vector2 spawnPoint, Graphics &graphics) :
     this->loadMap(mapName, graphics);
 }
 
-void Level::loadMap(std::string mapName, Graphics &graphics) {
-    // this->_backgroundTexture = SDL_CreateTextureFromSurface(graphics.getRenderer(), graphics.loadImage("assets/backgrounds/bkBlue.png"));
-    // this->_size = Vector2(1280, 960);
+Level::~Level() {}
 
+void Level::loadMap(std::string mapName, Graphics &graphics) {
     XMLDocument doc;
     std::stringstream ss;
     ss << "assets/maps/" << mapName << ".tmx";
@@ -55,7 +54,7 @@ void Level::loadMap(std::string mapName, Graphics &graphics) {
             pTileset->QueryIntAttribute("firstgid", &firstGid);
 
             SDL_Texture* tex = SDL_CreateTextureFromSurface(graphics.getRenderer(), graphics.loadImage(ss.str()));
-            this->_tileSets.push_back(Tileset(tex, firstGid));
+            this->_tilesets.push_back(Tileset(tex, firstGid));
 
             pTileset = pTileset->NextSiblingElement("tileset");
         }
@@ -94,9 +93,9 @@ void Level::loadMap(std::string mapName, Graphics &graphics) {
                             int gid = pTile->IntAttribute("gid");
                             Tileset tls;
 
-                            for (int i = 0; i < this->_tileSets.size(); i++) {
-                                if (this->_tileSets[i].FirstGid <= gid) {
-                                    tls = this->_tileSets.at(i);
+                            for (int i = 0; i < this->_tilesets.size(); i++) {
+                                if (this->_tilesets[i].FirstGid <= gid) {
+                                    tls = this->_tilesets.at(i);
                                     break;
                                 }
                             }
@@ -147,6 +146,58 @@ void Level::loadMap(std::string mapName, Graphics &graphics) {
             pLayer = pLayer->NextSiblingElement("layer");
         }
     }
+
+    /* Parse collisions */
+    XMLElement* pObjectGroup = mapNode->FirstChildElement("objectgroup");
+    if (pObjectGroup != NULL) {
+        while (pObjectGroup) {
+            const char* name = pObjectGroup->Attribute("name");
+            std::stringstream ss;
+            ss << name;
+
+            if (ss.str() == "collisions") {
+                XMLElement* pObject = pObjectGroup->FirstChildElement("object");
+                if (pObject != NULL) {
+                    while (pObject) {
+                        float x, y, width, height;
+                        x = pObject->FloatAttribute("x");
+                        y = pObject->FloatAttribute("y");
+                        width = pObject->FloatAttribute("width");
+                        height = pObject->FloatAttribute("height");
+                        this->_collisionRects.push_back(Rectangle(
+                            std::ceil(x) * globals::SPRITE_SCALE,
+                            std::ceil(y) * globals::SPRITE_SCALE,
+                            std::ceil(width) * globals::SPRITE_SCALE,
+                            std::ceil(height) * globals::SPRITE_SCALE
+                        ));
+
+                        pObject = pObject->NextSiblingElement("object");
+                    }
+                }
+            }
+            /* Other objectgroups go here */
+            else if (ss.str() == "spawn points") {
+                XMLElement* pObject = pObjectGroup->FirstChildElement("object");
+                if (pObject != NULL) {
+                    while (pObject) {
+                        float x = pObject->FloatAttribute("x");
+                        float y = pObject->FloatAttribute("y");
+                        const char* name = pObject->Attribute("name");
+                        std::stringstream ss;
+                        ss << name;
+
+                        if (ss.str() == "player") {
+                            this->_spawnPoint = Vector2(std::ceil(x) * globals::SPRITE_SCALE, std::ceil(y) * globals::SPRITE_SCALE);
+                        }
+
+                        pObject = pObject->NextSiblingElement("object");
+                    }
+                }
+            }
+
+            pObjectGroup = pObjectGroup->NextSiblingElement("objectgroup");
+        }
+    }
 }
 
 void Level::update(int elapsedTime) {}
@@ -156,5 +207,19 @@ void Level::draw(Graphics &graphics) {
         this->_tileList.at(i).draw(graphics);
     }
 }
- 
-Level::~Level() {}
+
+std::vector<Rectangle> Level::checkTileCollisions(const Rectangle &other) {
+    std::vector<Rectangle> others;
+
+    for (int i = 0; i < this->_collisionRects.size(); i++) {
+        if (this->_collisionRects[i].collidesWith(other)) {
+            others.push_back(this->_collisionRects.at(i));
+        }
+    }
+
+    return others;
+}
+
+const Vector2 Level::getPlayerSpawnPoint() const {
+    return this->_spawnPoint;
+}
