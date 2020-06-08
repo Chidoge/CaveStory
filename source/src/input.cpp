@@ -16,7 +16,6 @@ void Input::keyDownEvent(const SDL_Event &event) {
 
 void Input::keyUpEvent(const SDL_Event &event) {
     this->_releasedKeys[event.key.keysym.scancode] = true;
-    this->_pressedKeys[event.key.keysym.scancode] = false;
     this->_heldKeys[event.key.keysym.scancode] = false;
 }
 

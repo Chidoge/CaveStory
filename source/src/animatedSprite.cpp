@@ -87,8 +87,8 @@ void AnimatedSprite::draw(Graphics &graphics, int x, int y) {
         SDL_Rect destinationRectangle;
         destinationRectangle.x = x + this->_offsets[this->_currentAnimation].x;
         destinationRectangle.y = y + this->_offsets[this->_currentAnimation].y;
-        destinationRectangle.w = this->_sourceRect.w * globals::SRPITE_SCALE;
-        destinationRectangle.h = this->_sourceRect.h * globals::SRPITE_SCALE;
+        destinationRectangle.w = this->_sourceRect.w * globals::SPRITE_SCALE;
+        destinationRectangle.h = this->_sourceRect.h * globals::SPRITE_SCALE;
 
         SDL_Rect sourceRect = this->_animations[this->_currentAnimation][this->_frameIndex];
         graphics.blitSurface(this->_spriteSheet, &sourceRect, &destinationRectangle);
